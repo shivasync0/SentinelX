@@ -763,8 +763,8 @@ export function freshDemo(): Dataset {
     candidates: demoCandidates,
     sources: demoSources,
     scans: [createDemoScan(1)],
-    investigations: demoInvestigations,
-    reports: demoReports,
+    investigations: [],
+    reports: [],
     graph: graphFromData(demoBrands, demoAssets, demoCandidates, demoSources),
   };
 }

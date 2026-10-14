@@ -296,7 +296,10 @@ export function DiscoveryPage() {
                       </td>
 
                       <td>
-                        <div className="table-name">
+                        <button
+                          className="table-name table-button"
+                          onClick={() => openCandidate(candidate.id)}
+                        >
                           <AssetIcon type={candidate.candidate_type} />
                           <div>
                             <strong>{candidate.name}</strong>
@@ -304,7 +307,7 @@ export function DiscoveryPage() {
                               {candidate.domain ?? candidate.url ?? titleCase(candidate.candidate_type)}
                             </small>
                           </div>
-                        </div>
+                        </button>
                       </td>
 
                       <td>{brand?.name ?? 'Unassigned'}</td>

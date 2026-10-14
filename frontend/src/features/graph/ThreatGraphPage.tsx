@@ -369,10 +369,20 @@ export function ThreatGraphPage() {
                         key={node.id}
                         className="graph-node interactive"
                         opacity={opacity}
+                        role="button"
+                        tabIndex={0}
+                        aria-label={`${node.label}, ${titleCase(node.type)}`}
                         onClick={e => {
                           e.stopPropagation();
                           setSelectedNodeId(node.id);
                           setSelectedEdgeIndex(null);
+                        }}
+                        onKeyDown={e => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            setSelectedNodeId(node.id);
+                            setSelectedEdgeIndex(null);
+                          }
                         }}
                         style={{ cursor: 'pointer' }}
                       >
@@ -607,7 +617,7 @@ export function ThreatGraphPage() {
                     className="button primary full-width"
                     onClick={() => openCandidate(selectedCandidate.id)}
                   >
-                    Inspect Candidate Intelligence <ArrowRight size={14} />
+                    Inspect candidate <ArrowRight size={14} />
                   </button>
                   <button
                     className="button secondary full-width mt-2"

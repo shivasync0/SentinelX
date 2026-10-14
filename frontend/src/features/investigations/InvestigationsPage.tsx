@@ -10,10 +10,10 @@ import {
   SlidersHorizontal,
 } from 'lucide-react';
 import { Badge, EmptyState, useSentinel } from '../../App';
-import { formatDate } from '../../data';
+import { formatDate, demoInvestigations, demoReports } from '../../data';
 
 export function InvestigationsPage() {
-  const { data, openInvestigation, generateReport, busy, loading } = useSentinel();
+  const { data, openInvestigation, generateReport, busy, loading, saveDemo, notify } = useSentinel();
 
   const [query, setQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -198,11 +198,22 @@ export function InvestigationsPage() {
           <EmptyState
             icon={<Fingerprint size={28} />}
             title="No investigation cases found"
-            description="Adjust your search filters or initiate a new investigation case."
+            description="Adjust your search filters, initiate a new case, or load the seeded NovaPay campaign scenario."
           >
-            <button className="button primary" onClick={() => openInvestigation([])}>
-              <Plus size={15} /> Create First Case
-            </button>
+            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+              <button className="button primary" onClick={() => openInvestigation([])}>
+                <Plus size={15} /> Create First Case
+              </button>
+              <button
+                className="button secondary"
+                onClick={() => {
+                  saveDemo(prev => ({ ...prev, investigations: demoInvestigations, reports: demoReports }));
+                  notify('Loaded NovaPay coordinated campaign demonstration cases.');
+                }}
+              >
+                <Fingerprint size={15} /> Load NovaPay Incident Scenario
+              </button>
+            </div>
           </EmptyState>
         )}
 

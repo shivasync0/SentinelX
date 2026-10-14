@@ -45,3 +45,38 @@
 .cinematic-landing h1,.cinematic-landing h2,.cinematic-landing h3{font-family:'Instrument Serif',Georgia,serif}.cinematic-landing .cinematic-brand,.cinematic-landing .cinematic-nav nav,.cinematic-landing .cinematic-nav-cta,.cinematic-landing .cinematic-kicker,.cinematic-landing .cinematic-hero-lede,.cinematic-landing .cinematic-button,.cinematic-landing .cinematic-assurances,.cinematic-landing .cinematic-stats span,.cinematic-landing .cinematic-signal-chip,.cinematic-landing .cinematic-section-heading>p,.cinematic-landing .cinematic-card-top,.cinematic-landing .cinematic-capability-card p,.cinematic-landing .cinematic-source-row,.cinematic-landing .cinematic-footer,.cinematic-landing .cinematic-video-fallback{font-family:'Barlow',Arial,sans-serif}
 .verify-change-banner{display:flex;align-items:flex-start;gap:10px;margin:0 22px 18px;padding:12px 14px;border:1px solid #a8d76a55;border-radius:5px;background:#a8d76a10;color:#dceecf}.verify-change-banner>svg{color:var(--lime);margin-top:2px;flex-shrink:0}.verify-change-banner strong,.verify-change-banner span{display:block}.verify-change-banner strong{font-size:11px;font-weight:600}.verify-change-banner span{font-size:10px;color:#a9bcab;margin-top:3px;line-height:1.5}
 @media(prefers-reduced-motion:reduce){.cinematic-capability-card,.cinematic-button{transition:none}.cinematic-capability-card:hover,.cinematic-button:hover{transform:none}}
+
+/* Mobile responsive container overflow protection */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+.workspace, .main-shell, main {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.page-heading {
+  max-width: 100%;
+  flex-wrap: wrap;
+}
+
+.heading-actions {
+  flex-wrap: wrap;
+  max-width: 100%;
+}
+
+.overview-context {
+  max-width: 100%;
+  flex-wrap: wrap;
+}
+
+.topbar {
+  max-width: 100%;
+}
+
+.topbar-right {
+  max-width: 100%;
+  flex-wrap: wrap;
+}

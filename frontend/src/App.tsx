@@ -58,6 +58,8 @@ import { ReportsPage } from './features/reports/ReportsPage';
 import { ReportDetailPage } from './features/reports/ReportDetailPage';
 import { SourcesPage } from './features/sources/SourcesPage';
 import { VerifyPage } from './VerifyPage';
+import * as Legacy from './pages';
+import { GraphPage as LegacyGraphPage } from './graph';
 
 interface WorkspaceContext extends ReturnType<typeof useWorkspace> {
   busy: string | null;
@@ -243,7 +245,7 @@ function Workspace({ subRoute }: { subRoute?: string }) {
         workspace.addReport(report);
       }
       notify(`${offline ? 'Demo report' : 'Report'} generated. Your shareable report is ready.`);
-      navigate(`/app/reports/${report.id}`);
+      navigate(location.pathname.startsWith('/app') ? `/app/reports/${report.id}` : `/reports/${report.id}`);
     } catch (error) {
       notify(`Report failed: ${errorMessage(error)}`, true);
     } finally {
@@ -281,10 +283,14 @@ function Workspace({ subRoute }: { subRoute?: string }) {
     runScan,
     runLiveScan,
     openCandidate: id => {
-      // Set candidate URL param on current discovery route
       const currentPath = location.pathname;
-      const target = currentPath.includes('/social') ? '/app/social' : currentPath.includes('/apps') ? '/app/apps' : '/app/discovery';
-      navigate(`${target}?candidate=${id}`);
+      if (currentPath.startsWith('/app')) {
+        const target = currentPath.includes('/social') ? '/app/social' : currentPath.includes('/apps') ? '/app/apps' : '/app/discovery';
+        navigate(`${target}?candidate=${id}`);
+      } else {
+        const basePath = currentPath.split('?')[0];
+        navigate(`${basePath}?candidate=${id}`);
+      }
     },
     openInvestigation: (ids = []) => setInvestigationIds(ids),
     generateReport,
@@ -525,42 +531,43 @@ function Workspace({ subRoute }: { subRoute?: string }) {
               </div>
             )}
 
-            {/* Dynamic Application Routes */}
-            <Routes>
-              {/* Primary /app routes */}
-              <Route path="" element={<DashboardPage />} />
-              <Route path="brands" element={<BrandsPage />} />
-              <Route path="brands/new" element={<BrandWizardPage />} />
-              <Route path="brands/:id" element={<BrandDetailPage />} />
-              <Route path="discovery" element={<DiscoveryPage />} />
-              <Route path="social" element={<SocialPageWrapper />} />
-              <Route path="apps" element={<AppMonitoringPage />} />
-              <Route path="investigations" element={<InvestigationsPage />} />
-              <Route path="investigations/:id" element={<InvestigationDetailPage />} />
-              <Route path="threat-graph" element={<ThreatGraphPage />} />
-              <Route path="reports" element={<ReportsPage />} />
-              <Route path="reports/:reportId" element={<ReportDetailPage />} />
-              <Route path="settings/sources" element={<SourcesPage />} />
-              <Route path="verify" element={<VerifyPage />} />
-
-              {/* Top-level subroute rendering for backwards compatibility */}
-              {subRoute === 'overview' && <Route path="*" element={<DashboardPage />} />}
-              {subRoute === 'brands' && <Route path="*" element={<BrandsPage />} />}
-              {subRoute === 'brands-new' && <Route path="*" element={<BrandWizardPage />} />}
-              {subRoute === 'brands-detail' && <Route path="*" element={<BrandDetailPage />} />}
-              {subRoute === 'discovery' && <Route path="*" element={<DiscoveryPage />} />}
-              {subRoute === 'social' && <Route path="*" element={<SocialPageWrapper />} />}
-              {subRoute === 'apps' && <Route path="*" element={<AppMonitoringPage />} />}
-              {subRoute === 'investigations' && <Route path="*" element={<InvestigationsPage />} />}
-              {subRoute === 'investigations-detail' && <Route path="*" element={<InvestigationDetailPage />} />}
-              {subRoute === 'threat-graph' && <Route path="*" element={<ThreatGraphPage />} />}
-              {subRoute === 'reports' && <Route path="*" element={<ReportsPage />} />}
-              {subRoute === 'reports-detail' && <Route path="*" element={<ReportDetailPage />} />}
-              {subRoute === 'sources' && <Route path="*" element={<SourcesPage />} />}
-              {subRoute === 'verify' && <Route path="*" element={<VerifyPage />} />}
-
-              <Route path="*" element={<Navigate to="/app" replace />} />
-            </Routes>
+            {/* Application Views */}
+            {subRoute ? (
+              <>
+                {subRoute === 'overview' && <Legacy.OverviewPage />}
+                {subRoute === 'verify' && <VerifyPage />}
+                {subRoute === 'brands' && <Legacy.BrandsPage />}
+                {subRoute === 'brands-new' && <BrandWizardPage />}
+                {subRoute === 'brands-detail' && <BrandDetailPage />}
+                {subRoute === 'discovery' && <Legacy.CandidatesPage />}
+                {subRoute === 'social' && <Legacy.SocialPage />}
+                {subRoute === 'apps' && <Legacy.AppsPage />}
+                {subRoute === 'investigations' && <Legacy.InvestigationsPage />}
+                {subRoute === 'investigations-detail' && <InvestigationDetailPage />}
+                {subRoute === 'threat-graph' && <LegacyGraphPage />}
+                {subRoute === 'reports' && <Legacy.ReportsPage />}
+                {subRoute === 'reports-detail' && <Legacy.ReportDetail />}
+                {subRoute === 'sources' && <Legacy.SourcesPage />}
+              </>
+            ) : (
+              <Routes>
+                <Route path="" element={<DashboardPage />} />
+                <Route path="brands" element={<BrandsPage />} />
+                <Route path="brands/new" element={<BrandWizardPage />} />
+                <Route path="brands/:id" element={<BrandDetailPage />} />
+                <Route path="discovery" element={<DiscoveryPage />} />
+                <Route path="social" element={<SocialPageWrapper />} />
+                <Route path="apps" element={<AppMonitoringPage />} />
+                <Route path="investigations" element={<InvestigationsPage />} />
+                <Route path="investigations/:id" element={<InvestigationDetailPage />} />
+                <Route path="threat-graph" element={<ThreatGraphPage />} />
+                <Route path="reports" element={<ReportsPage />} />
+                <Route path="reports/:reportId" element={<ReportDetailPage />} />
+                <Route path="settings/sources" element={<SourcesPage />} />
+                <Route path="verify" element={<VerifyPage />} />
+                <Route path="*" element={<Navigate to="/app" replace />} />
+              </Routes>
+            )}
 
             {/* Footer */}
             <footer className="workspace-footer">
@@ -947,6 +954,7 @@ function CandidateDrawer() {
 function InvestigationDialog({ ids, onClose }: { ids: number[]; onClose: () => void }) {
   const { data, mode, saveDemo, addInvestigation, notify } = useSentinel();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [title, setTitle] = useState(
     ids.length ? `${data.candidates.find(c => c.id === ids[0])?.name ?? 'Brand'} impersonation review` : ''
@@ -1006,7 +1014,7 @@ function InvestigationDialog({ ids, onClose }: { ids: number[]; onClose: () => v
         }.`
       );
       onClose();
-      navigate('/app/investigations');
+      navigate(location.pathname.startsWith('/app') ? '/app/investigations' : '/investigations');
     } catch (err) {
       setError(errorMessage(err));
     } finally {

@@ -8,10 +8,10 @@ import {
   SlidersHorizontal,
 } from 'lucide-react';
 import { EmptyState, useSentinel } from '../../App';
-import { formatDate, titleCase } from '../../data';
+import { formatDate, titleCase, demoReports } from '../../data';
 
 export function ReportsPage() {
-  const { data, generateReport, busy, loading } = useSentinel();
+  const { data, generateReport, busy, loading, saveDemo, notify } = useSentinel();
   const [query, setQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
 
@@ -127,9 +127,20 @@ export function ReportsPage() {
             title="No intelligence reports found"
             description="Run a scan or export an investigation case to generate your first auditable dossier."
           >
-            <button className="button primary" onClick={() => void generateReport()}>
-              <Plus size={15} /> Generate First Report
-            </button>
+            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+              <button className="button primary" onClick={() => void generateReport()}>
+                <Plus size={15} /> Generate Scan Report
+              </button>
+              <button
+                className="button secondary"
+                onClick={() => {
+                  saveDemo(prev => ({ ...prev, reports: demoReports }));
+                  notify('Loaded demonstration intelligence reports.');
+                }}
+              >
+                <FileText size={15} /> Load Demo Reports
+              </button>
+            </div>
           </EmptyState>
         )}
 
